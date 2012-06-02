@@ -1,0 +1,53 @@
+#!/usr/bin/make -f
+
+## uncomment to enable hardening
+#export DEB_BUILD_HARDENING=1
+
+cfg_opts := --prefix=/opt/vyatta
+cfg_opts += --libdir=/usr/lib
+cfg_opts += --includedir=/usr/include
+cfg_opts += --mandir=\$${prefix}/share/man
+cfg_opts += --infodir=\$${prefix}/share/info
+cfg_opts += CFLAGS="$(CFLAGS)"
+cfg_opts += LDFLAGS="-Wl,-z,defs"
+cfg_opts += CXXFLAGS="$(CCXFLAGS)"
+inst_opts := --sourcedir=debian/tmp
+
+clean:
+	if test -f Makefile ; then $(MAKE) clean distclean ; fi
+	rm -f build-stamp
+	rm -f config.status config.sub config.guess config.log
+	rm -f aclocal.m4 configure Makefile.in Makefile INSTALL
+	rm -rf config
+	rm -rf m4
+	dh clean
+
+binary binary-arch binary-indep: install
+	rm -f debian/files
+	dh binary --before dh_gencontrol
+	rm -f debian/*/DEBIAN/conffiles
+	if [ -f "../.VYATTA_DEV_BUILD" ]; then \
+		dh_gencontrol -- -v999.dev; \
+	else \
+		dh_gencontrol; \
+	fi
+	dh binary --after dh_gencontrol
+
+build: Makefile
+build:
+	rm -f debian/*.debhelper*
+	dh build --before configure
+	dh build --after configure --before dh_auto_test
+	dh build --after dh_auto_test
+
+Makefile: Makefile.in
+	./configure $(cfg_opts)
+
+Makefile.in: Makefile.am configure.ac
+	mkdir -p m4
+	autoreconf -i --force
+
+install: build
+	dh install --before dh_install
+	dh_install $(inst_opts)
+

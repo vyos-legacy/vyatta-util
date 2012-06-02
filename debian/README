@@ -1,0 +1,7 @@
+The Debian Package vyatta-util
+---------------------------------
+
+Various utilities written in C for speed
+
+ -- John Southworth <john.southworth@vyatta.com> Sun, 24 Apr 2011
+
