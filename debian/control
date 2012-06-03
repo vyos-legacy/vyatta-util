@@ -6,7 +6,7 @@ Build-Depends: debhelper (>= 5), autotools-dev
 Standards-Version: 3.7.2
 
 Package: vyatta-util
-Architecture: all
+Architecture: any
 Depends: 
  libvyatta-util1 (=${binary:Version})
 Description: Various utilities 
