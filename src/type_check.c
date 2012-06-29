@@ -33,6 +33,8 @@ get_validator (const char *type)
     return &validate_protocol_negate;
   else if (strcmp(type, "macaddr") == 0)
     return &validate_macaddr;
+  else if (strcmp(type, "sys_macaddr") == 0)
+    return &validate_sys_macaddr;
   else if (strcmp(type, "macaddr_negate") == 0)
     return &validate_macaddr_negate;
   else if (strcmp(type, "ipv6") == 0)
@@ -73,7 +75,12 @@ get_validator (const char *type)
 int
 validate_ipv4 (const char *str)
 {
+  if (!str)
+    return 0;
   unsigned int a[4];
+  if (strlen(str) == 0){
+    return 0;
+  }
   if (!re_match(str, "^[0-9]+\\.[0-9]+\\.[0-9]+\\.[0-9]+$"))
     return 0;
   if (sscanf(str, "%u.%u.%u.%u", &a[0], &a[1], &a[2], &a[3])
@@ -90,6 +97,8 @@ validate_ipv4 (const char *str)
 int
 validate_ipv4net (const char *str)
 {
+  if (!str)
+    return 0;
   unsigned int a[4], plen;
   uint32_t addr;
   if (!re_match(str, "^[0-9]+\\.[0-9]+\\.[0-9]+\\.[0-9]+/[0-9]+$"))
@@ -113,6 +122,8 @@ validate_ipv4net (const char *str)
 int
 validate_ipv4net_addr (const char *str)
 {
+  if (!str)
+    return 0;
   unsigned int a[4], plen;
   uint32_t addr;
   if (!re_match(str, "^[0-9]+\\.[0-9]+\\.[0-9]+\\.[0-9]+/[0-9]+$"))
@@ -144,6 +155,8 @@ validate_ipv4net_addr (const char *str)
 int
 validate_ipv4range (const char *str)
 {
+  if (!str)
+    return 0;
   if (!re_match(str, 
   "^[0-9]+\\.[0-9]+\\.[0-9]+\\.[0-9]+-[0-9]+\\.[0-9]+\\.[0-9]+\\.[0-9]+$"))
     return 0;
@@ -175,6 +188,8 @@ validate_ipv4range (const char *str)
 int
 validate_ipv4_negate (const char *str)
 {
+  if (!str)
+    return 0;
   char ipv4[15];
   memset(ipv4, '\0', 15);
   if (sscanf(str, "!%15s", ipv4) != 1)
@@ -185,6 +200,8 @@ validate_ipv4_negate (const char *str)
 int
 validate_ipv4net_negate (const char *str)
 {
+  if (!str)
+    return 0;
   char ipv4net[18];
   memset(ipv4net, '\0', 18);
   if (sscanf(str, "!%18s", ipv4net) != 1)
@@ -195,6 +212,8 @@ validate_ipv4net_negate (const char *str)
 int
 validate_ipv4range_negate (const char *str)
 {
+  if (!str)
+    return 0;
   char ipv4[31];
   memset(ipv4, '\0', 31);
   if (sscanf(str, "!%31s", ipv4) != 1)
@@ -205,6 +224,8 @@ validate_ipv4range_negate (const char *str)
 int
 validate_iptables4_addr (const char *str)
 {
+  if (!str)
+    return 0;
   if (!validate_ipv4_negate(str) &&
       !validate_ipv4net_negate(str) &&
       !validate_ipv4range_negate(str))
@@ -214,7 +235,9 @@ validate_iptables4_addr (const char *str)
 
 int
 validate_protocol (const char *str)
-{
+{ 
+  if (!str)
+    return 0;
   if (strcmp(str, "all") == 0)
     return 1;
   if (re_match(str, "^[0-9]+$")) {
@@ -235,6 +258,8 @@ validate_protocol (const char *str)
 int
 validate_protocol_negate (const char *str)
 {
+  if (!str)
+    return 0;
   char proto[100];
   memset(proto, '\0', 100);
   if (sscanf(str, "!%100s", proto) != 1)
@@ -243,14 +268,57 @@ validate_protocol_negate (const char *str)
 }
 
 int
+validate_sys_macaddr (const char *str)
+{
+    if (!str)
+      return 0;
+    if (!validate_macaddr(str))
+      return 0;
+
+    int a[6];
+    int sum = 0;
+      
+    if (sscanf(str, "%x:%x:%x:%x:%x:%x", &a[0], &a[1], &a[2], &a[3], &a[4], &a[5]) 
+	!= 6) {
+      printf("Error: wrong number of octets\n"); 
+      return 0;
+    }
+    
+    if (a[0] & 1){
+      printf("Error: %x:%x:%x:%x:%x:%x is a multicast address\n",a[0],a[1],a[2],a[3],a[4],a[5]);
+      return 0;
+    }
+
+    if ((a[0] == 0) && (a[1] == 0) && (a[2] == 94) &&(a[3] == 0) && (a[4] == 1)) {
+      printf("Error: %x:%x:%x:%x:%x:%x is a vrrp mac address\n",a[0],a[1],a[2],a[3],a[4],a[5]);
+      return 0;
+    }
+
+    int i;
+    for (i=0; i<6; ++i){
+      sum += a[i];
+    }
+
+    if (sum == 0){
+      printf("Error: zero is not a valid address\n");
+      return 0;
+    }
+    return 1;
+}
+
+int
 validate_macaddr (const char *str)
 {
+  if (!str)
+    return 0;
   return re_match(str, "^[0-9a-fA-F]{2}(:[0-9a-fA-F]{2}){5}$");
 }
 
 int
 validate_macaddr_negate (const char *str)
 {
+  if (!str)
+    return 0;
   char macaddr[17];
   memset(macaddr,'\0',17);
   if (sscanf(str, "!%17s", macaddr) != 1)
@@ -261,6 +329,8 @@ validate_macaddr_negate (const char *str)
 int
 validate_ipv6 (const char *str)
 {
+  if (!str)
+    return 0;
   struct in6_addr addr;
   if (inet_pton(AF_INET6, str, &addr) <= 0)
     return 0;
@@ -270,6 +340,8 @@ validate_ipv6 (const char *str)
 int
 validate_ipv6net (const char *str)
 {
+  if (!str)
+    return 0;
   unsigned int prefix_len;
   struct in6_addr addr;
   char *slash, *endp;
@@ -292,6 +364,8 @@ validate_ipv6net (const char *str)
 int 
 validate_ipv6_negate (const char *str)
 {
+  if (!str)
+    return 0;
   char ipv6[39];
   memset(ipv6, '\0', 39);
   if (sscanf(str, "!%39s", ipv6) != 1)
@@ -302,6 +376,8 @@ validate_ipv6_negate (const char *str)
 int
 validate_ipv6net_negate (const char *str)
 {
+  if (!str)
+    return 0;
   char ipv6net[43];
   memset(ipv6net, '\0', 43);
   if (sscanf(str, "!%43s", ipv6net) != 1)
@@ -312,18 +388,24 @@ validate_ipv6net_negate (const char *str)
 int
 validate_hex16 (const char *str)
 {
+  if (!str)
+    return 0;
   return re_match(str, "^[0-9a-fA-F]{4}$");
 }
 
 int
 validate_hex32 (const char *str)
 {
+  if (!str)
+    return 0;
   return re_match(str, "^[0-9a-fA-F]{8}$");
 }
 
 int
 validate_ipv6_addr_param (const char *str)
 {
+  if (!str)
+    return 0;
   char value[87];
   char ipv6_1[43];
   char ipv6_2[43];
@@ -349,18 +431,24 @@ validate_ipv6_addr_param (const char *str)
 int
 validate_restrictive_filename (const char *str)
 {
+  if (!str)
+    return 0;
   return re_match(str, "^[-_.a-zA-Z0-9]+$");
 }
 
 int
 validate_no_bash_special (const char *str)
 {
+  if (!str)
+    return 0;
   return (!re_match(str,"[;&\"'`!$><|]"));
 }
 
 int
 validate_u32 (const char *str)
 {
+  if (!str)
+    return 0;
   if (!re_match(str, "^[0-9]+$"))
     return 0;
   unsigned long int val = strtoul(str, NULL, 0);
@@ -373,6 +461,8 @@ validate_u32 (const char *str)
 int
 validate_bool (const char *str)
 {
+  if (!str)
+    return 0;
   if (strcmp(str, "true") == 0)
     return 1;
   else if (strcmp(str, "false") == 0)
@@ -383,6 +473,8 @@ validate_bool (const char *str)
 int 
 validate_port (const char * str) 
 {
+  if (!str)
+    return 0;
   int port;
   struct servent *s;
   if (re_match(str, "^[0-9]+$")) {
@@ -405,6 +497,8 @@ validate_port (const char * str)
 int 
 validate_portrange (const char * str)
 {
+  if (!str)
+    return 0;
   int start, stop;
   start = stop = 0;
   char start_str[5], stop_str[5];
@@ -429,6 +523,8 @@ validate_portrange (const char * str)
 int 
 validate_port_negate (const char *str)
 {
+  if (!str)
+    return 0;
   char port[5];
   memset(port, '\0', 5);
   if (sscanf(str, "!%5s", port) != 1)
@@ -439,6 +535,8 @@ validate_port_negate (const char *str)
 int 
 validate_portrange_negate (const char *str)
 {
+  if (!str)
+    return 0;
   char port[11];
   memset(port, '\0', 11);
   if (sscanf(str, "!%11s", port) != 1)
@@ -449,6 +547,8 @@ validate_portrange_negate (const char *str)
 int
 validateType (const char *type, const char *str, int quiet)
 {
+  if (!str)
+    return 0;
   int (*validator)(const char *) = NULL;
   validator = get_validator(type);
   if (validator == NULL) {

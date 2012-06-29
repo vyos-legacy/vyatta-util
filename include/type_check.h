@@ -13,6 +13,7 @@ int validate_iptables4_addr (const char *);
 int validate_protocol (const char *);
 int validate_protocol_negate (const char *);
 int validate_macaddr (const char *);
+int validate_sys_macaddr (const char *);
 int validate_macaddr_negate (const char *);
 int validate_ipv6 (const char *);
 int validate_ipv6net (const char *);
