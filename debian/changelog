@@ -1,3 +1,11 @@
+vyatta-util (0.6) unstable; urgency=low
+
+  * Add a sys_macaddr validator (bug 8120) this library will be
+    integrated as the type checker into the cli in the future
+  * 0.5
+
+ -- John Southworth <john.southworth@vyatta.com>  Fri, 29 Jun 2012 14:55:35 -0700
+
 vyatta-util (0.5) unstable; urgency=low
 
   * Add a sys_macaddr validator (bug 8120) this library will be
