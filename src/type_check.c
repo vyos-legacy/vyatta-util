@@ -240,6 +240,8 @@ validate_protocol (const char *str)
     return 0;
   if (strcmp(str, "all") == 0)
     return 1;
+  if (strcmp(str, "ip") == 0 || strcmp(str, "0") == 0)
+    return 1;
   if (re_match(str, "^[0-9]+$")) {
     int val = atoi(str);
     if (val >= 1 && val <= 255)
