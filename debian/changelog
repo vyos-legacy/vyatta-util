@@ -1,3 +1,13 @@
+vyatta-util (0.9) unstable; urgency=low
+
+  * Bugfix 8186: accept protocol 0/ip as valid
+  * Add a sys_macaddr validator (bug 8120) this library will be
+    integrated as the type checker into the cli in the future
+  * 0.7
+  * 0.8
+
+ -- John Southworth <john.southworth@vyatta.com>  Thu, 05 Jul 2012 08:37:28 -0700
+
 vyatta-util (0.8) unstable; urgency=low
 
   * Bugfix 8186: accept protocol 0/ip as valid
