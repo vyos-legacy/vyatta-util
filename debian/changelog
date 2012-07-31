@@ -1,3 +1,10 @@
+vyatta-util (0.10) unstable; urgency=low
+
+  * Bugfix 8252: Fix off by one problem in port range validation
+  * 0.9
+
+ -- John Southworth <john.southworth@vyatta.com>  Tue, 31 Jul 2012 15:09:30 -0700
+
 vyatta-util (0.9) unstable; urgency=low
 
   * Bugfix 8252: Fix off by one problem in port range validation
