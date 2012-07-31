@@ -503,9 +503,9 @@ validate_portrange (const char * str)
     return 0;
   int start, stop;
   start = stop = 0;
-  char start_str[5], stop_str[5];
-  memset(start_str, '\0', 5);
-  memset(stop_str, '\0', 5);
+  char start_str[6], stop_str[6];
+  memset(start_str, '\0', 6);
+  memset(stop_str, '\0', 6);
   if (!re_match(str, "^[0-9]+-[0-9]+$"))
     return 0;
   if (sscanf(str, "%d-%d", &start, &stop) != 2)
