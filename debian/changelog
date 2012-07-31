@@ -1,3 +1,9 @@
+vyatta-util (0.10) unstable; urgency=low
+
+  * Bugfix 8252: Fix off by one problem in port range validation
+
+ -- John Southworth <john.southworth@vyatta.com>  Tue, 31 Jul 2012 14:56:41 -0700
+
 vyatta-util (0.9) unstable; urgency=low
 
   * Bugfix 8186: accept protocol 0/ip as valid
