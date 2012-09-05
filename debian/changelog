@@ -1,3 +1,9 @@
+vyatta-util (0.12) unstable; urgency=low
+
+  * Bugfix 8256,8257: don't allow 0 net or addr in ipset
+
+ -- John Southworth <john.southworth@vyatta.com>  Wed, 05 Sep 2012 14:43:37 -0700
+
 vyatta-util (0.11) unstable; urgency=low
 
   * Bugfix 8252: Fix off by one problem in port range validation
