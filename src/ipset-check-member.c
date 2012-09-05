@@ -34,6 +34,10 @@ check_address (char *addr)
     }
     return 1;
   }
+  if (strcmp(addr, "0.0.0.0") == 0) {
+    printf ("Error: zero IP address not valid in address-group");
+    return 0;
+  }
   if (!validateType("ipv4", addr, 1)){
     printf("Error: [%s] isn't valid IPv4 address\n", addr); 
     return 0;
@@ -46,6 +50,10 @@ check_network (char *network)
 {
   if (!validateType("ipv4net", network, 1)) {
     printf("Error: [%s] isn't a valid IPv4 network\n", network);
+    return 0;
+  }
+  if (re_match(network, "^0.0.0.0")){
+    printf("Error: zero net invalid in network-group\n");
     return 0;
   }
   return 1;
