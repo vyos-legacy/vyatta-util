@@ -1,6 +1,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <netinet/in.h>
+#include <arpa/inet.h>
+#include <sys/types.h>
+#include <stdint.h>
 #include "misc.h"
 #include "type_check.h"
 
@@ -30,6 +34,31 @@ check_address (char *addr)
   if (re_match(addr, "^[^-]+-[^-]+")) {
     if (!validateType("ipv4range", addr, 1)) {
       printf("Error: [%s] is not a valid IPv4 address range\n", addr);
+      return 0;
+    }
+    /* check that both addresses are in the same /24 subnet */
+    unsigned int a1[4], a2[4];
+    uint32_t addr1 = 0;
+    uint32_t addr2 = 0;
+    uint32_t mask = 0xffffff00;
+    if (sscanf(addr, "%u.%u.%u.%u-%u.%u.%u.%u", 
+                   &a1[0], &a1[1], &a1[2], &a1[3],
+                   &a2[0], &a2[1], &a2[2], &a2[3]) != 8)
+      return 0;
+    int i;
+    for (i = 0; i<4; ++i) {
+      addr1 <<= 8;
+      addr1 |= a1[i];
+      addr2 <<= 8;
+      addr2 |= a2[i];
+    }
+    addr1 = addr1 & mask;
+    addr2 = addr2 & mask;
+    struct in_addr in;
+    if (addr1 != addr2){
+      addr1 = htonl(addr1);
+      memcpy(&in, &addr1, sizeof(struct in_addr));
+      printf("Error: address range must be within %s/24\n", inet_ntoa(in));
       return 0;
     }
     return 1;
