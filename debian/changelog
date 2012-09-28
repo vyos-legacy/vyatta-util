@@ -1,3 +1,14 @@
+vyatta-util (0.14) unstable; urgency=low
+
+  * Bugfix 8256,8257: don't allow 0 net or addr in ipset
+  * Bugfix 8401: check to ensure that address ranges are part of the
+    same /24 net
+  * 0.11
+  * 0.12
+  * 0.13
+
+ -- John Southworth <john.southworth@vyatta.com>  Fri, 28 Sep 2012 14:49:04 -0700
+
 vyatta-util (0.13) unstable; urgency=low
 
   * Bugfix 8256,8257: don't allow 0 net or addr in ipset
