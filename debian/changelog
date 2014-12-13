@@ -1,3 +1,9 @@
+vyatta-util (0.13+vyos2+lithium1) unstable; urgency=low
+
+  * New branch
+
+ -- Alex Harpin <development@landsofshadow.co.uk>  Sat, 13 Dec 2014 13:44:18 +0000
+ 
 vyatta-util (0.13+vyos1+helium1) unstable; urgency=low
 
   * New branch
