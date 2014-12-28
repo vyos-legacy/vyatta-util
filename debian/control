@@ -1,7 +1,7 @@
 Source: vyatta-util
 Section: contrib/net
 Priority: extra
-Maintainer: Vyatta Package Maintainers <maintainers@vyatta.com>
+Maintainer: VyOS Package Maintainers <maintainers@vyos.net>
 Build-Depends: debhelper (>= 5), autotools-dev
 Standards-Version: 3.7.2
 
@@ -14,7 +14,7 @@ Description: Various utilities
 Package: libvyatta-util1
 Architecture: any
 Description: Vyatta utilities library
- Vyatta utilities library (libvyatta-util).
+ VyOS utilities library (libvyatta-util).
 
 Package: libvyatta-util-dev
 Architecture: any
@@ -22,6 +22,6 @@ Priority: optional
 Section: libdevel
 Depends: libvyatta-util1 (=${binary:Version}),
 Description: libvyatta-util development package
- Development header and library files for the Vyatta utilities 
+ Development header and library files for the VyOS utilities 
  library.
 
