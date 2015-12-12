@@ -1,3 +1,10 @@
+vyatta-util (0.13+vyos2+lithium4) unstable; urgency=low
+
+  [ Alex Harpin ]
+  * vyatta-util: update check_network to allow "this" network
+
+ -- Alex Harpin <development@landsofshadow.co.uk>  Sat, 12 Dec 2015 20:19:30 +0000
+
 vyatta-util (0.13+vyos2+lithium3) unstable; urgency=low
 
   * vyatta-util: update dh_gencontrol with new development build flag
