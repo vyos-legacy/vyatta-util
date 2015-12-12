@@ -81,8 +81,12 @@ check_network (char *network)
     printf("Error: [%s] isn't a valid IPv4 network\n", network);
     return 0;
   }
-  if (re_match(network, "^0.0.0.0")){
-    printf("Error: zero net invalid in network-group\n");
+  if (re_match(network, "^0.0.0.0/0$")){
+    printf("Error: 0.0.0.0/0 invalid in network-group\n");
+    return 0;
+  }
+  if (re_match(network, "/0$")){
+    printf("Error: zero subnet invalid in network-group\n");
     return 0;
   }
   return 1;
